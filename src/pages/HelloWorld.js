@@ -8,13 +8,13 @@ export default () => {
     width: "400px",
     margin: "30px",
     border: "1px solid #e8e8e8",
-  };
+  }
   const [value, setValue] = useState(0);
   const onChange = useCallback((e) => {
-    setValue(e.target.value);
+    setValue(e.target.value)
   });
   const resetValue = useCallback(() => {
-    setValue("");
+    setValue("")
   });
   return (
     <>
