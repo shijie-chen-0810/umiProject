@@ -12,6 +12,9 @@
   "license": "ISC",
   "devDependencies": {
     "umi": "^3.3.7",
-    "umi-plugin-react": "^1.15.8"
+    "@umijs/preset-react": "^1"
+  },
+  "dependencies": {
+    "antd": "^4.11.2"
   }
 }
