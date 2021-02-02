@@ -1,7 +1,7 @@
 import { Effect, Reducer } from 'umi';
 
 export interface HeroModelState {
-  name: string;
+  heroName: string;
 }
 
 export interface HeroModelType {
@@ -11,7 +11,7 @@ export interface HeroModelType {
     query: Effect;
   };
   reducers: {
-    save: Reducer<HeroModelState>;
+    save: Reducer;
   };
 }
 
@@ -19,14 +19,20 @@ const HeroModel: HeroModelType = {
   namespace: 'hero',
 
   state: {
-    name: 'hero',
+    heroName: 'hero',
   },
 
   effects: {
-    *query({ payload }, { call, put }) {},
+    *query({ payload }, { call, put }) {
+      yield put({
+        type: 'save',
+        payload: payload,
+      });
+    },
   },
   reducers: {
     save(state, action) {
+      console.log(action.payload);
       return {
         ...state,
         ...action.payload,

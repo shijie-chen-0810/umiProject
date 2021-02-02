@@ -5,8 +5,10 @@ import { Link } from 'umi';
 const { Header, Content, Footer } = Layout;
 
 function BasicLayout(props: any) {
-  const location = props.location;
-  const pathname = location.pathname;
+  const {
+    location: { pathname },
+    children,
+  } = props;
   const arr = [
     { url: '/hero', tab: 'hero' },
     { url: '/item', tab: 'item' },
@@ -33,7 +35,7 @@ function BasicLayout(props: any) {
       </Header>
       <Content style={{ padding: '0 50px' }}>
         <div style={{ background: '#fff', padding: 24, minHeight: 280 }}>
-          {props.children}
+          {children}
         </div>
       </Content>
       <Footer style={{ textAlign: 'center' }}>Created by xiaohuoni</Footer>
