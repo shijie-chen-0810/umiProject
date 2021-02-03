@@ -11,11 +11,8 @@ interface PageProps extends ConnectProps {
 const Hero: FC<PageProps> = (props) => {
   const [heroId, setHeroId] = useState(0);
   const {
-    hero: { heroDetail },
+    hero: { heroDetail, heroList },
   } = props;
-  const changeName = useCallback(() => {
-    props.test();
-  }, []);
   const getDetail = useCallback(() => {
     props.getDetail(heroId);
   }, [heroId]);
@@ -29,26 +26,52 @@ const Hero: FC<PageProps> = (props) => {
     } else {
       setHeroId(heroDetail.ename);
     }
-  }, []);
+  }, [heroList]);
   return (
     <div>
       <h1>Page hero</h1>
       <h2>This is {props.hero.heroName}</h2>
       <div>
-        <span>name:</span>
-        {heroDetail.cname}
+        <span>name:---</span>
+        {heroDetail.cname || 'none'}
       </div>
       <div>
-        <span>title:</span>
-        {heroDetail.title}
+        <span>title:---</span>
+        {heroDetail.title || 'none'}
       </div>
       <div>
-        <span>skin:</span>
-        {heroDetail.skin_name}
+        <span>skin:---</span>
+        {heroDetail.skin_name || 'none'}
+      </div>
+      <hr />
+      <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+        {heroList.map((item) => {
+          return (
+            <div
+              key={item.ename}
+              style={{
+                width: heroDetail.cname === item.cname ? '80px' : '60px',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <img
+                src={`https://game.gtimg.cn/images/yxzj/img201606/heroimg/${item.ename}/${item.ename}.jpg`}
+                style={
+                  heroDetail.cname === item.cname
+                    ? { width: '80px', height: '80px' }
+                    : { width: '40px', height: '40px' }
+                }
+              />
+              <div style={{}}>{item.cname}</div>
+            </div>
+          );
+        })}
       </div>
       <input type="text" value={heroId} onChange={inputHandler} />
       <button onClick={getDetail}>getDetail</button>
-      <button onClick={changeName}>click</button>
     </div>
   );
 };

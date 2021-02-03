@@ -3,6 +3,7 @@ import { Effect, Reducer, Subscription, request } from 'umi';
 export interface HeroModelState {
   heroName: string;
   heroDetail: HeroModelDetail;
+  heroList: Array<HeroModelList>;
 }
 
 export interface HeroModelDetail {
@@ -12,6 +13,14 @@ export interface HeroModelDetail {
   skin_name: string;
 }
 
+export interface HeroModelList {
+  ename: number;
+  cname: string;
+  title: string;
+  skin_name: string;
+  hero_type: number;
+  new_type: number;
+}
 export interface HeroModelType {
   namespace: 'hero';
   state: HeroModelState;
@@ -37,14 +46,15 @@ const HeroModel: HeroModelType = {
       title: '',
       skin_name: '',
     },
+    heroList: [],
   },
 
   effects: {
-    *query({ payload }, { call, put }) {
+    *query(action, { call, put }) {
       const data = yield request('/web201605/js/herolist.json');
       yield put({
         type: 'save',
-        payload: payload,
+        payload: data.reverse(),
       });
     },
     *getHeroDetail({ payload }, { call, put }) {
@@ -59,7 +69,7 @@ const HeroModel: HeroModelType = {
     save(state, action) {
       return {
         ...state,
-        ...action.payload,
+        heroList: action.payload,
       };
     },
     changeDetail(state, action) {
@@ -75,7 +85,6 @@ const HeroModel: HeroModelType = {
         if (pathname === '/hero') {
           dispatch({
             type: 'query',
-            payload: { heroName: 'herosub' },
           });
         }
       });
