@@ -1,4 +1,4 @@
-import { Effect, Reducer } from 'umi';
+import { Effect, Reducer, Subscription } from 'umi';
 
 export interface ItemModalState {
   itemName: string;
@@ -12,6 +12,9 @@ export interface ItemModalType {
   };
   reducers: {
     syncChange: Reducer;
+  };
+  subscriptions: {
+    setup: Subscription;
   };
 }
 
@@ -36,6 +39,21 @@ const ItemModal: ItemModalType = {
         ...state,
         ...action.payload,
       };
+    },
+  },
+  subscriptions: {
+    setup({ history, dispatch }) {
+      return history.listen((temp) => {
+        console.log(temp);
+        if (temp.pathname === '/item') {
+          dispatch({
+            type: 'asyncChange',
+            payload: {
+              itemName: 'itemsub',
+            },
+          });
+        }
+      });
     },
   },
 };
