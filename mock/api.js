@@ -1,4 +1,6 @@
 import herolist from './herolist.json';
+import projectList from './projectList.json';
+
 export default {
   '/apq/web201605/js/herolist.json': herolist,
   '/apq/getherodetailbyid': (req, res) => {
@@ -8,4 +10,5 @@ export default {
     });
     res.send(detail);
   },
+  '/apq/getprojectlist': projectList,
 };

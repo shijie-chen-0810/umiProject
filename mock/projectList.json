@@ -1,0 +1,30 @@
+[
+  {
+    "codeType": 1,
+    "createdReport": 0,
+    "databaseType": 2,
+    "endTime": null,
+    "id": 111,
+    "imageUrl": null,
+    "name": "光大GSP2.0",
+    "nickName": "光大GSP2.0",
+    "reportReviewer": null,
+    "reportWriter": null,
+    "startTime": 1594684800000,
+    "workPlace": "三墩"
+  },
+  {
+    "codeType": 1,
+    "createdReport": 0,
+    "databaseType": 1,
+    "endTime": 1586995200000,
+    "id": 110,
+    "imageUrl": null,
+    "name": "测试FTP",
+    "nickName": "测试FTP",
+    "reportReviewer": null,
+    "reportWriter": null,
+    "startTime": 1586995200000,
+    "workPlace": "测试FTP"
+  }
+]

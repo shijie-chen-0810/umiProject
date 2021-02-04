@@ -58,14 +58,14 @@ const Hero: FC<PageProps> = (props) => {
               }}
             >
               <img
-                src={`https://game.gtimg.cn/images/yxzj/img201606/heroimg/${item.ename}/${item.ename}.jpg`}
+                src={`https://game.gtimg.cn/images/yxzj/img20160/heroimg/${item.ename}/${item.ename}.jpg`}
                 style={
                   heroDetail.cname === item.cname
                     ? { width: '80px', height: '80px' }
                     : { width: '40px', height: '40px' }
                 }
               />
-              <div style={{}}>{item.cname}</div>
+              <div>{item.ename}</div>
             </div>
           );
         })}

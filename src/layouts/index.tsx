@@ -1,6 +1,6 @@
 import styles from './index.less';
 import { Layout, Menu } from 'antd';
-import UserLayout from './userLayout';
+import ProjectLayout from './projectLayout';
 import { Link } from 'umi';
 
 const { Header, Content, Footer } = Layout;
@@ -15,13 +15,13 @@ function BasicLayout(props: any) {
     { url: '/hero', tab: 'hero' },
     { url: '/item', tab: 'item' },
     { url: '/skill', tab: 'skill' },
-    { url: '/machine', tab: 'machine' },
+    { url: '/projectInfo', tab: 'project' },
   ];
   if (pathname === '/') {
     history.replace('/hero');
   }
-  if (pathname === '/machine') {
-    return <UserLayout>{children}</UserLayout>;
+  if (pathname === '/projectInfo') {
+    return <ProjectLayout>{children}</ProjectLayout>;
   } else {
     return (
       <Layout>

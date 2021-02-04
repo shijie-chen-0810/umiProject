@@ -39,7 +39,7 @@ const HeroModel: HeroModelType = {
   namespace: 'hero',
 
   state: {
-    heroName: 'hero',
+    heroName: '测试hero名称',
     heroDetail: {
       ename: 0,
       cname: '',
