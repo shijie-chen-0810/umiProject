@@ -44,7 +44,6 @@ const ItemModal: ItemModalType = {
   subscriptions: {
     setup({ history, dispatch }) {
       return history.listen((temp) => {
-        console.log(temp);
         if (temp.pathname === '/item') {
           dispatch({
             type: 'asyncChange',

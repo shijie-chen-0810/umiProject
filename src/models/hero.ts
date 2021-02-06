@@ -4,6 +4,7 @@ export interface HeroModelState {
   heroName: string;
   heroDetail: HeroModelDetail;
   heroList: Array<HeroModelList>;
+  freeHero: Array<HeroModelList>;
 }
 
 export interface HeroModelDetail {
@@ -27,10 +28,12 @@ export interface HeroModelType {
   effects: {
     query: Effect;
     getHeroDetail: Effect;
+    getFreeHero: Effect;
   };
   reducers: {
     save: Reducer;
     changeDetail: Reducer;
+    changeFreeHero: Reducer;
   };
   subscriptions: { setup: Subscription };
 }
@@ -47,6 +50,7 @@ const HeroModel: HeroModelType = {
       skin_name: '',
     },
     heroList: [],
+    freeHero: [],
   },
 
   effects: {
@@ -59,9 +63,26 @@ const HeroModel: HeroModelType = {
     },
     *getHeroDetail({ payload }, { call, put }) {
       const data = yield request('/getherodetailbyid?id=' + payload);
+      console.log(data, payload);
       yield put({
         type: 'changeDetail',
         payload: data,
+      });
+    },
+    *getFreeHero(action, { put }) {
+      const freeHeroList = yield request('/freeheros.json', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json; charset=utf-8',
+        },
+        body: JSON.stringify({
+          number: 10,
+        }),
+      });
+      yield put({
+        type: 'changeFreeHero',
+        payload: freeHeroList,
       });
     },
   },
@@ -78,6 +99,12 @@ const HeroModel: HeroModelType = {
         ...state,
       };
     },
+    changeFreeHero(state, action) {
+      return {
+        ...state,
+        freeHero: action.payload,
+      };
+    },
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -85,6 +112,9 @@ const HeroModel: HeroModelType = {
         if (pathname === '/hero') {
           dispatch({
             type: 'query',
+          });
+          dispatch({
+            type: 'getFreeHero',
           });
         }
       });
