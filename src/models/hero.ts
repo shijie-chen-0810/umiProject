@@ -3,24 +3,24 @@ import { Effect, Reducer, Subscription, request } from 'umi';
 export interface HeroModelState {
   heroName: string;
   heroDetail: HeroModelDetail;
-  nowType: string;
   heroList: Array<HeroModelList>;
   freeHero: Array<HeroModelList>;
 }
 
 export interface HeroModelDetail {
-  hero: HeroModelList;
-  skins: Array<any>;
-  spells: Array<any>;
+  ename: number;
+  cname: string;
+  title: string;
+  skin_name: string;
 }
 
 export interface HeroModelList {
-  heroId: number;
-  alias: string;
-  name: string;
+  ename: number;
+  cname: string;
   title: string;
-  goldPrice: string;
-  roles: Array<string>;
+  skin_name: string;
+  hero_type: number;
+  new_type: number;
 }
 export interface HeroModelType {
   namespace: 'hero';
@@ -34,7 +34,6 @@ export interface HeroModelType {
     save: Reducer;
     changeDetail: Reducer;
     changeFreeHero: Reducer;
-    changeType: Reducer;
   };
   subscriptions: { setup: Subscription };
 }
@@ -44,18 +43,11 @@ const HeroModel: HeroModelType = {
 
   state: {
     heroName: '测试hero名称',
-    nowType: '',
     heroDetail: {
-      hero: {
-        heroId: 0,
-        alias: '',
-        name: '',
-        title: '',
-        goldPrice: '',
-        roles: [],
-      },
-      skins: [],
-      spells: [],
+      ename: 0,
+      cname: '',
+      title: '',
+      skin_name: '',
     },
     heroList: [],
     freeHero: [],
@@ -70,9 +62,7 @@ const HeroModel: HeroModelType = {
       });
     },
     *getHeroDetail({ payload }, { call, put }) {
-      const data = yield request(
-        `/lm/images/lol/act/img/js/hero/${payload}.js`,
-      );
+      const data = yield request('/getherodetailbyid?id=' + payload);
       console.log(data, payload);
       yield put({
         type: 'changeDetail',
@@ -98,10 +88,6 @@ const HeroModel: HeroModelType = {
   },
   reducers: {
     save(state, action) {
-      console.log({
-        ...state,
-        heroList: action.payload,
-      });
       return {
         ...state,
         heroList: action.payload,
@@ -117,12 +103,6 @@ const HeroModel: HeroModelType = {
       return {
         ...state,
         freeHero: action.payload,
-      };
-    },
-    changeType(state, action) {
-      return {
-        ...state,
-        nowType: action.payload,
       };
     },
   },

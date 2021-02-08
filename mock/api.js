@@ -6,7 +6,7 @@ export default {
   '/apq/getherodetailbyid': (req, res) => {
     const id = req.query.id - 0;
     const detail = herolist.find((item) => {
-      return item.heroId === id;
+      return item.ename === id;
     });
     res.send(detail);
   },
