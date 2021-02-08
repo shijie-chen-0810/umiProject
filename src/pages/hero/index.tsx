@@ -8,50 +8,49 @@ interface PageProps extends ConnectProps {
   hero: HeroModelState;
   getDetail: Function;
   getFreeHero: Function;
+  changeType: Function;
 }
 const heroType = [
-  { key: 0, value: '全部' },
-  { key: 1, value: '战士' },
-  { key: 2, value: '法师' },
-  { key: 3, value: '坦克' },
-  { key: 4, value: '刺客' },
-  { key: 5, value: '射手' },
-  { key: 6, value: '辅助' },
-  { key: -1, value: '周免' },
+  { key: '', value: '全部' },
+  { key: 'fighter', value: '战士' },
+  { key: 'mage', value: '法师' },
+  { key: 'tank', value: '坦克' },
+  { key: 'assassin', value: '刺客' },
+  { key: 'marksman', value: '射手' },
+  { key: 'support', value: '辅助' },
+  { key: 'free', value: '周免' },
 ];
 const Hero: FC<PageProps> = (props) => {
-  const [nowType, setNowType] = useState(0);
   const [hoverHero, setHoverHero] = useState(0);
   const [normalLayout, setNormalLayout] = useState(true);
   const {
-    hero: { heroDetail, heroList, freeHero },
+    hero: { heroDetail, heroList, freeHero, nowType },
     history: { push },
   } = props;
-  console.log(freeHero);
   const [showHero, setShowHero] = useState(heroList);
   const chooseHero = useCallback((clickId) => {
     return () => {
-      push('/hero/' + clickId);
+      push('/hero/detail?id=' + clickId);
     };
   }, []);
   const changeType = useCallback(
     ({ target }) => {
-      if (target.value === -1) {
+      if (target.value === 'free') {
         setNormalLayout(false);
         setShowHero(freeHero);
-        setHoverHero(freeHero[0].ename);
+        setHoverHero(freeHero[0].heroId);
       } else if (target.value) {
         setNormalLayout(true);
         setShowHero(
           heroList.filter((item) => {
-            return item.hero_type === target.value;
+            return item.roles.includes(target.value);
           }),
         );
       } else {
         setShowHero(heroList);
         setNormalLayout(true);
       }
-      setNowType(target.value);
+      props.changeType(target.value);
     },
     [freeHero],
   );
@@ -61,8 +60,15 @@ const Hero: FC<PageProps> = (props) => {
     };
   }, []);
   useEffect(() => {
-    setShowHero(heroList);
-  }, [heroList]);
+    if (!nowType) {
+      setShowHero(heroList);
+    } else {
+      changeType({ target: { value: nowType } });
+    }
+    if (nowType === 'free') {
+      setNormalLayout(false);
+    }
+  }, [heroList, nowType]);
   return (
     <>
       <Radio.Group
@@ -83,27 +89,27 @@ const Hero: FC<PageProps> = (props) => {
           {showHero.map((item) => {
             return (
               <Col
-                key={item.ename}
+                key={item.heroId}
                 span={2}
                 style={{
-                  width: heroDetail.cname === item.cname ? '80px' : '60px',
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'center',
                   alignItems: 'center',
+                  marginBottom: '8px',
                 }}
               >
                 <div
                   className={styles.avatarWrap}
-                  onClick={chooseHero(item.ename)}
+                  onClick={chooseHero(item.heroId)}
                 >
                   <Avatar
                     shape="square"
-                    src={`https://game.gtimg.cn/images/yxzj/img201606/heroimg/${item.ename}/${item.ename}.jpg`}
+                    src={`http://game.gtimg.cn/images/lol/act/img/champion/${item.alias}.png`}
                     style={{ width: '60px', height: '60px' }}
                   />
                 </div>
-                <div>{item.cname}</div>
+                <div>{item.name}</div>
               </Col>
             );
           })}
@@ -115,24 +121,25 @@ const Hero: FC<PageProps> = (props) => {
               {freeHero.map((item) => {
                 return (
                   <Col
-                    span={hoverHero === item.ename ? 6 : 2}
-                    key={item.ename}
+                    span={hoverHero === item.heroId ? 6 : 2}
+                    key={item.heroId}
                     className={classnames({
                       [styles.onhero]: true,
-                      [styles.activeHero]: hoverHero === item.ename,
+                      [styles.activeHero]: hoverHero === item.heroId,
                     })}
+                    onClick={chooseHero(item.heroId)}
                   >
-                    {hoverHero === item.ename ? (
+                    {hoverHero === item.heroId ? (
                       <img
-                        src={`https://game.gtimg.cn/images/yxzj/img201606/heroimg/${item.ename}/${item.ename}-freehover.png`}
+                        src={`https://game.gtimg.cn/images/yxzj/img201606/heroimg/${item.heroId}/${item.heroId}-freehover.png`}
                         alt=" "
-                        onMouseOver={changeActiveFreeHero(item.ename)}
+                        onMouseOver={changeActiveFreeHero(item.heroId)}
                       />
                     ) : (
                       <img
-                        src={`https://game.gtimg.cn/images/yxzj/img201606/heroimg/${item.ename}/${item.ename}.jpg`}
+                        src={`https://game.gtimg.cn/images/yxzj/img201606/heroimg/${item.heroId}/${item.heroId}.jpg`}
                         alt=" "
-                        onMouseOver={changeActiveFreeHero(item.ename)}
+                        onMouseOver={changeActiveFreeHero(item.heroId)}
                       />
                     )}
                   </Col>
@@ -158,6 +165,12 @@ export default connect(
     getFreeHero() {
       dispatch({
         type: 'hero/getFreeHero',
+      });
+    },
+    changeType(type: number) {
+      dispatch({
+        type: 'hero/changeType',
+        payload: type,
       });
     },
   }),
